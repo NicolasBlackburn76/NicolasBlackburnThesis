@@ -15,3 +15,14 @@ postgres via pgAdmin
 
 next steps
 - merge data + upload csv into db
+
+CREATE TABLE tmk_annual_release (
+  primary_key VARCHAR(10),
+  ccode VARCHAR(10),
+  year VARCHAR(10),
+  tmk_ongoing VARCHAR(10),
+  genpol_ongoing VARCHAR(10),
+  tmk_onset VARCHAR(10),
+  tmk_onse_sum VARCHAR(10),
+  PRIMARY KEY (primary_key)
+);
