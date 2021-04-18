@@ -1,0 +1,39 @@
+\chapter{Literature Review}\label{ch:background}
+
+\section{Targeted Mass Killings (TMKs)}
+\subsection{Definitions}
+This project will use the TMK definition provided by Goldsmith, Butcher, Nanlohy and Muchlinski in their paper \emph{Targeted Mass Killing dataset}. A TMK is defined as \emph{“is the direct killing of non-combatant members of a
+group by a formally organized armed force that results in 25 or more deaths in an annual period,
+with the intent of destroying the group or intimidating the group by creating a perception of
+imminent threat to its survival. A targeted group is defined in terms of political and/or ethnic and/or
+religious identity.”} \\
+In summary there are 3 key aspects for an event to be considered a TMK
+\begin{itemize}
+  \item Minimum of 25 deaths
+  \item Inclusion of state and non-state actors
+  \item Intent of perpetrators is to destroy the targeted group
+\end{itemize}
+
+\section{Previous work}
+Much of the previous studies in TMK forecasting has centered around identifying and quantifying conditions that typically trigger the onset of violence. Harff (2003) identified six different variables in a predictive model, namely political upheaval, occurrences of prior genocides, regime type, idealogy of the ruling class and economic development of a state. 
+
+Goldsmith (2018) extended on these themes to include structural factors such as ethic divisions as well as factors with temporal variance such as election cycles and regional conflicts.
+
+
+
+\section{Deep Learning}
+
+
+\section{Class Imbalance}
+\subsection{Definition}
+The classification of imbalanced data
+In our case the minority instances of TMKs actua
+Most deep learning techniques perform poorly in classifying datasets if class-to-clashttps://www.overleaf.com/project/6077bd90e4c2db93be17f470s separability is poor due to strong bias towards the majority class.
+
+
+\subsection{Imbalance Ratio}
+The Imbalance ratio is used to quantity the maximum between-class imbalance level. $C_i$ is a set of example in class $i$. $max_i{|C_i|}$ and $min_i{|C_i|}$ represent the maximum and minimum number of instances from class \emph{i} respectively. In a binary classification problem where the majority class has 500 instances and the minority has 100, the imbalance ratio $\rho = 5$\\
+
+$\rho = \frac{max_i\{|C_i|\}}{min_i\{|C_i|\}}$
+
+\subsection{Consequences of High Class Imbalance}
