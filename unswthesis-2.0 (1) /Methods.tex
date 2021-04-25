@@ -4,12 +4,9 @@
 \section{Programming Languages}
 
 \subsection{R}
-R will be use for primarily for the preprocessing of data, this encompasses the ge
+R will be use for primarily for the preprocessing of data, this encompasses the generation of synthetic data, down-sampling of non-TMK events and imputation of missing values. The names and purpose of the R libraries can be found in Fig Table 4.1. \\
 
  \begin{longtable}[c]{| c | l |}
- \caption{R Libraries.\label{long}}\\
-
- 
  \hline
  R library & Description\\
  \hline
@@ -18,32 +15,28 @@ R will be use for primarily for the preprocessing of data, this encompasses the 
  \hline
  \multicolumn{2}{|l|}{Continuation of Table \ref{long}}\\
  \hline
- R library & Descriptiom\\
+ R library & Description\\
  \hline
  \endhead
-
  \hline
+  \caption{R Libraries.\label{long}}\\
  \endlastfoot
 
-smotefamily & SMOTE is a oversampling technique which synthesizes a new minority instance  \\
-& between a pair of one minority instance and one of its K nearest neighbors\\
+smotefamily \cite{smotefamily} & SMOTE is a oversampling technique which synthesizes a new minority instance  \\
+& between a pair of one minority instance and one of its K nearest neighbors.\\
  \hline
-rose & The package provides functions to deal with binary classification problems in the \\
-& presence of imbalanced classes. Synthetic balanced samples are generated \\ 
-& according to ROSE (Menardi and Torelli, 2013).\\
+rose \cite{rose} & The package provides functions to deal with binary classification problems in the \\
+& presence of imbalanced classes. Synthetic balanced samples are generated. \\ 
+& according to ROSE (Menardi and Torelli, 2013) \cite{Lunardo}.\\
  \hline
- mice & Multiple imputation using Fully Conditional Specification (FCS) implemented \\
- & by the MICE algorithm as described in Van Buuren and Groothuis \\ 
- & Oudshoorn(2011)
+ mice \cite{mice} & Multiple imputation using Fully Conditional Specification (FCS) implemented \\
+ & by the MICE algorithm as described in Van Buuren and Groothuis Oudshoorn \cite{vanBuren}. \\
  \end{longtable}
 
 \subsection{Python}
-The neural network models will be coded in python, as will the data visualizations
+The neural network models will be coded in python, as will the data visualizations. The names and purpose of the python libraries can be found in Fig Table 4.2. \\
 
  \begin{longtable}[c]{| c | l |}
- \caption{Python Libraries.\label{long}}\\
-
- 
  \hline
  R library & Description\\
  \hline
@@ -52,23 +45,132 @@ The neural network models will be coded in python, as will the data visualizatio
  \hline
  \multicolumn{2}{|l|}{Continuation of Table \ref{long}}\\
  \hline
- R library & Descriptiom\\
+ Python library & Description\\
+ \hline
+ \endhead
+ \hline
+   \caption{Python Libraries.\label{long}}\\
+ \endlastfoot
+keras \cite{keras} & keras is a deep learning framework that is built on top of TensorFlow 2.0 \\
+& keras covers every step of the machine learning workflow, from data management \\
+& to hyperparameter training to deployment solutions.\\
+ \hline
+matplotlib \cite{Matplotlib} & matplotlib is a widely used data visualization library presence of imbalanced \\
+& classes. Synthetic balanced samples are generated \\ 
+ \end{longtable}
+
+\subsection{SQL}
+Structured Query Langauge (SQL) will be used to perform merges via inner joins across the datasets
+
+\section{Architecture}
+\subsection{Constraints}
+The forecasting of TMKs is a time series problem which contains some constraints on the training dataset that the model will need to adhere to.
+
+\subsubsection{Effect of Time on Training Set}
+Only TMK events that occured in previous years can be used in the training set. Meaning that if a TMK event occurred in 1990 only events prior to that year can be used to train on.
+
+
+\subsubsection{Event Overlap}
+TMKs that occurred within the same year cannot be used in the training set. Even if they occurred prior to the target TMK. Meaning if a TMK occurred in December of 1990 we cannot use a TMK that occurred in January of the same year in the training set
+
+\begin{figure}[h]
+\centering
+\includegraphics{modelconstraints.png}
+\caption{Selecting Training Set Data}
+\end{figure}
+
+\section{Long Short-Term Memory Network}
+Long Short-Term Memory Network or LSTM is a variant of RNNs that are trained using back-propagation through time to address the vanishing gradient problem. The structure of a typical vanilla LSTM is depicted in Fig 4.2.
+
+\begin{figure}[h]
+\centering
+\includegraphics{lstm.png}
+\caption{LSTM blocks}
+\end{figure}
+
+Instead of neurons LSTMs are composed of memory blocks that are connected through layers. Each block contains gates that regulate the state and output. Each block is essentially a state machine where the gates of the units have weights that are learned and update during training. This project will implement a vanilla LSTM that is comprised of the gates listed in Table 4.3.
+
+\begin{center}
+\begin{table}
+\centering
+\begin{tabular}{ |c|c| } 
+\hline
+Gate Type & Description  \\
+\hline
+ Input & conditionally decides values from input to update memory state\\ 
+\hline
+ Forget & relegates what information to be discarded from block  \\  
+\hline
+Output & outputs values based on input and memory state \\ 
+\hline
+\end{tabular}
+\caption{LSTM Gate Types}
+\end{table}
+\end{center}
+
+
+\subsection{Sliding Windows - Folds}
+Due to the constraints outlined earlier a static method of partitioning the data for training and testing sets will be enforced. Figure 4.2 depicts the creation of folds across the TMK dataset. 
+
+The top row is depicts TMK events which are highlighted in red, in this example dataset there are 6 TMK occurrences across a 10 year period. Each row under the TMK events are numbered folds. In this example we have 3 different overlapping folds. The algorithm for fold creation is as follows, the training set of the fold will cover the first 3 consecutive TMK events and the testing set will cover the next TMK event. In this example Fold 1 spans across year 1 to 5 with the training set covering years 1 to 4 (highlighted in blue) and the testing set in year 5 (highlighted in orange).
+
+Fold 2 is created by the same algorithm but it skips the first TMK event in year 1 and instead includes the next TMK event in year 7. This makes the stride of this model 1 year. Using this defintion folds can be created to include all TMK events. The exact size and years covered by each fold will be determined once the exact number of events in the generated dataset is known
+
+\begin{figure}[h]
+\centering
+\includegraphics{folds.png}
+\caption{Fold Creation}
+\end{figure}
+
+
+\begin{figure}[h]
+\centering
+\includegraphics{timeseries.png}
+\caption{Deterioration of Variables Leading Up to TMK}
+\end{figure}
+\clearpage
+
+TMK classification problem is a multi variant time series problem where a combination of a number of variables ultimatly influence the occurrence of an event. Figure 4.4 highlights the deterioration of factors that ultimately culminate in the occurrence of an example TMK event in 1996. The blue and orange bars indicate an uptick in infant mortality and the number of violent strikes in a country respectively. This is an example of a pattern that the LSTM should capture across all the variables in the TMK dataset. 
+
+
+\section{Metrics}
+When dealing with datasets that are highly imbalanced a significant problem is trying to predict enough tmk events correctly whilst not stimulatenously not misclassifying non-tmk events. With a generated dataset expected to have an imbalance ratio of upwards of $\rho = 26$ bias towards non-tmk events, developing a model that can reliably predict tmk events for each year in out-of-sampling testing is a major challenge
+
+The Receiver-Operating-Characteristic (ROC) analysis evaluates possible prediction thresholds by plotting the true-postive (sensitivity) and false-positive rates. ROC analysis is especially helpful because it provides a relevant and intuitive metric that can be compared across models.An AUC of 0.5 indicates prediction no better than chance; an AUC of 1.0 indicates perfect prediction.
+
+\begin{figure}[h]
+\centering
+\includegraphics{confusionmatrix.png}
+\caption{Confusion Matrix}
+\end{figure}
+
+ \begin{longtable}[c]{| c | c |}
+
+ 
+ \hline
+ Metric & Equation\\
+ \hline
+ \endfirsthead
+
+ \hline
+ \multicolumn{2}{|l|}{Continuation of Table \ref{long}}\\
+ \hline
+ Metric & Equation\\
  \hline
  \endhead
 
  \hline
+ \caption{Definition of Classification Metrics.\label{long}}\\
  \endlastfoot
 
-keras & SMOTE is a oversampling technique which synthesizes a new minority instance  \\
-& between a pair of one minority instance and one of its K nearest neighbors\\
+Recall (True Positive Rate)  & $Recall = \frac{TP}{TP + FN}$ \\
  \hline
-rose & The package provides functions to deal with binary classification problems in the \\
-& presence of imbalanced classes. Synthetic balanced samples are generated \\ 
-& according to ROSE (Menardi and Torelli, 2013).\\
+Precision (Predictive Positive Rate) & $Precision = \frac{TP}{TP + FP}$ \\
  \hline
- mice & Multiple imputation using Fully Conditional Specification (FCS) implemented \\
- & by the MICE algorithm as described in Van Buuren and Groothuis \\ 
- & Oudshoorn(2011)
+False Positive Rate (FPR)  & $FPR = \frac{FP}{FP + TN}$ \\
+ \hline
+Receiver Operating Characteristics (AUC) 
+& Area under the Recall and False Positive Curve \\ 
+ \hline
+Precision Recall Curve (PRC) AUC & Area under PRC \\
  \end{longtable}
-
-\section{Discussion}

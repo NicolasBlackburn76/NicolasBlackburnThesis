@@ -1,12 +1,14 @@
 \chapter{Literature Review}\label{ch:background}
 
+%Includes "References" in the table of contents
+
 \section{Targeted Mass Killings (TMKs)}
 \subsection{Definitions}
-This project will use the TMK definition provided by Goldsmith, Butcher, Nanlohy and Muchlinski in their paper \emph{Targeted Mass Killing dataset}. A TMK is defined as \emph{“is the direct killing of non-combatant members of a
+This project will use the TMK definition provided by Goldsmith, Butcher, Nanlohy and Muchlinski in their paper  \emph{Targeted Mass Killing dataset} \cite{Goldsmith2013}. A TMK is defined as \emph{“the direct killing of non-combatant members of a
 group by a formally organized armed force that results in 25 or more deaths in an annual period,
 with the intent of destroying the group or intimidating the group by creating a perception of
 imminent threat to its survival. A targeted group is defined in terms of political and/or ethnic and/or
-religious identity.”} \\
+religious identity.”} \\\\
 In summary there are 3 key aspects for an event to be considered a TMK
 \begin{itemize}
   \item Minimum of 25 deaths
@@ -14,26 +16,72 @@ In summary there are 3 key aspects for an event to be considered a TMK
   \item Intent of perpetrators is to destroy the targeted group
 \end{itemize}
 
-\section{Previous work}
-Much of the previous studies in TMK forecasting has centered around identifying and quantifying conditions that typically trigger the onset of violence. Harff (2003) identified six different variables in a predictive model, namely political upheaval, occurrences of prior genocides, regime type, idealogy of the ruling class and economic development of a state. 
+\subsection{Previous work}
+The motivation behind studying and predicting TMKs is to prevent violence from occurring before it is too late. Goldsmith and Butcher highlight TMK forecasting as a tool for policy makers saying that \emph{“prediction can have great value for policy makers if the preferred option is
+the prevention of an event, or if a pro-active policy is more effective than a reactive one”} \cite{Goldsmith2018}
 
-Goldsmith (2018) extended on these themes to include structural factors such as ethic divisions as well as factors with temporal variance such as election cycles and regional conflicts.
+Much of the previous studies in TMK forecasting has centered around identifying and quantifying conditions that typically trigger the onset of violence. Harff (2003) \cite{Harff2003} identified six different variables in a predictive model, namely political upheaval, occurrences of prior genocides, regime type, ideology of the ruling class and economic development of a state. 
 
+Goldsmith (2018) \cite{Goldsmith2018} extended on these themes to include structural factors such as ethic divisions as well as factors with temporal variance such as election cycles and regional conflicts. Similarly, Qian's 2019 “forecasting the onset of genocidal killing” thesis \cite{EricQian} explores the same variables for genocide prediction in a random forest model.
 
+Research into TMKs have garnered increased attention in recent years particularly since the United Nations General Assembly create an office on genocide prevention and the responsibility to protect following the atrocities committed in the 1990s in the Balkans and Rwanda \cite{unitednations}. Despite this, TMKs remain an under-researched topic as highlighted by (Goldsmith, Nanlohy, Sowmya and Muchlinski, 2020, p2). \cite{Goldsmith2018}. This view is echoed by Anderton and Carter who say that \emph{“despite over a half century of scholarship and important public policy initiatives on mass atrocities, there are fewer than three dozen published large-sample statistical studies of genocide and mass killing”} \cite{anderton}.  
 
 \section{Deep Learning}
+In recent years there have been great advancements in the new algorithms in machine learning. One such important break though is the technique known as deep learning. Deep learning forms a subset of of machine learning algorithms that attempt to mimic operations of a brain to identify relationships. Deep learning techniques model high-level abstractions in data by employing deep architectures composed of multiple non-linear transformations \cite{Berard}.
+
+However despite these advances in the field, the application of deep learning approaches are relatively rare in social sciences. There are several possible reasons for this such as the highly imbalanced nature of databases in social sciences that are often too small and contain too many missing values to effectively apply deep learning techniques.
+
+\subsection{Recurrent Neural Network}
+TMK forecasting is a classification problem dealing with time series data which makes it ideally suited for the application of Recurrent Neural Networks (RNNs). The rationale behind using RNNs is in the generalization of the solution with respect to time. Since sequences have varying lengths, other deep learning approaches such as Multi Layer Perceptions (MLP) cannot be applied easily \cite{Aravind}. Additionally the weights for the RNN are shared throughout components, making training more efficient.
+
+\subsubsection{Vanishing Gradient Problem}
+An issue with conventional RNNs is that they are susceptible to the vanishing / exploding gradient problem. Fig 2.1 depicts the structure of a typical RNN \cite{nirarbel}.
+
+\begin{figure}[h]
+\centering
+\includegraphics{rnn.png}
+\caption{Recurrent Neural Network}
+\end{figure}
+
+The network has an input sequence of vectors [$x_1, x_2, x_3, ..., x_k$]. At step t the network has an input vector $x_t$. Past information is kept in memory state vectors [$c_0, c_1, c_2, ..., c_{k-1)}$]. The input vector and memory state vectors are concatenated to comprise the complete input vector at time step t, [$c_{t-1}, x_t$].
+
+Additionally the network has two weight matrices $W_{rec}$ and $W_{in}$ denoting the weight given to past remembered information and new information respectively. Finally the activation function of the hidden layer is a sigmoid function.
+
+\subsubsection{Backpropagation}
+After the RNN outputs the prediction vector $h_k$, the loss function $L_k$ can be calculated and the gradient can be calculated via backpropagation \cite{barakor}.
+
+The gradient of the loss function in an RNN:
+
+\[ \scalebox{1.5}{ $\frac{\delta{E}}{\delta {W}} = \sum_{t=1}^{T} \frac{\delta{E_t}}{\delta {W}}$} \]
+
+The gradient is used to update weights by:
+\[ \scalebox{1.5}{  $W \leftarrow W - \alpha \frac{\delta{E}}{\delta {W}} $} \]
+
+The gradient of the loss function at the $k^{th}$ step is
+
+\[ \scalebox{1.5}{$\frac{\delta{E_k}}{\delta {W}} = \frac{\delta{E_k}}{\delta {h_k}} \frac{\delta{h_k}}{\delta {c_k}} ... \frac{\delta{c_2}}{\delta {c_1}} \frac{\delta{c_1}}{\delta {W}} $} \]
+
+\[ \scalebox{1.5}{$= \frac{\delta{E_k}}{\delta {h_k}} \frac{\delta{h_k}}{\delta {c_k}} (\prod_{i=2}^{k} \frac{\delta{c_t}}{\delta {c_{t-1}}} ) \frac{\delta{c_1}}{\delta {W}}$} \] 
+
+
+\[ \scalebox{1.5}{ Vanishing gradient: $\frac{\delta{c_i}}{\delta {c_{c-1}}}  < 1 $} \] 
+\[ \scalebox{1.5}{ Exploding gradient: $\frac{\delta{c_i}}{\delta {c_{c-1}}}  > 1 $} \] 
+For vanishing gradients, after many blocks the gradient grows to zero very quickly, making it impossible to learn long term dependencies. Conversely in the second case the gradient grows exponentially to infinity making learning unstable. To deal with the vanishing / exploding gradient problem the Long Short-Term Memory Network(LSTM) will be applied. The intricacies of the vanilla LSTM as well as the partitioning of the data for the LSTM to train on will be discussed in the methods section.
 
 
 \section{Class Imbalance}
 \subsection{Definition}
-The classification of imbalanced data
-In our case the minority instances of TMKs actua
-Most deep learning techniques perform poorly in classifying datasets if class-to-clashttps://www.overleaf.com/project/6077bd90e4c2db93be17f470s separability is poor due to strong bias towards the majority class.
-
+Class imbalance refers to the event when the number of data points belonging to the minority class is significantly lower then the majority class. Classification of highly imbalanced data present problems for TMK prediction as thankfully occurrences of TMKs are relatively rare. This means that the class distribution is highly skewed towards non-tmk events. The imbalance nature of the dataset presents problem as most neural network classifiers fail to learn to classify such datasets correctly if class-to-class separability is poor due to a strong bias towards the majority class \cite{vidwath}.
 
 \subsection{Imbalance Ratio}
-The Imbalance ratio is used to quantity the maximum between-class imbalance level. $C_i$ is a set of example in class $i$. $max_i{|C_i|}$ and $min_i{|C_i|}$ represent the maximum and minimum number of instances from class \emph{i} respectively. In a binary classification problem where the majority class has 500 instances and the minority has 100, the imbalance ratio $\rho = 5$\\
+The imbalance ratio is used to quantity the maximum between-class imbalance level. It is used by Johnson (2019) \cite{Johnson} in a survey on deep learning across various datasets with high levels of class imbalance. 
 
-$\rho = \frac{max_i\{|C_i|\}}{min_i\{|C_i|\}}$
+Definition: $C_i$ is a set of example in class $i$. $max_i{|C_i|}$ and $min_i{|C_i|}$ represent the maximum and minimum number of instances from class \emph{i} respectively. In a binary classification problem where the majority class has 500 instances and the minority has 100, the imbalance ratio $\rho = 5$\\
+
+\[ \scalebox{1.5}{ $\rho = \frac{max_i\{|C_i|\}}{min_i\{|C_i|\}}$ } \] 
 
 \subsection{Consequences of High Class Imbalance}
+Most deep learning techniques perform poorly in classifying datasets with high imbalance ratios \cite{Yan}. The highly imbalance TMK dataset poses difficulty in training models to forecast events as most learners will exhibit bias towards the majority class and in extreme cases, may ignore the minority class altogether.
+
+\subsection{Solutions}
+This project will utilize a variety of techniques to alleviate the class imbalance problem. Strategies include the generation of new synthetic data from the minority class as well as downsampling datapoints from the majority class. This techniques will be discussed in greater detail in the methods section.

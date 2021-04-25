@@ -1,11 +1,40 @@
 \chapter{Project Plan}\label{ch:projectplan}
+\section{Thesis A Progress}
+Apart from conducting a literature review for the thesis, an investigation was undertaken to determine the best social conflict databases that would be the best for merging with the TMK dataset. Additionally a Linux machine has been set up on CSE and has been populated with a test dataset. A simple multi-layer perception model has also been created and run on the test data. The model was trained on unprocessed data so naturally the model performed poorly, its purpose was more to test if neural networks could be run on the dataset with all its variables in a reasonable amount of time.
+\subsection{Deliverables}
+The deliverables for thesis A are the seminar in (week 8) and the report (week 10)
+\section{Thesis B Plan}
+\subsection{Generate Dataset(2 weeks)}
+The dataset will be generated via merging the TMK events with external datasets as outlined in the 
+\subsection{Data processing(2 weeks)}
+Synthetic data will be generated to account for the level of class imbalance in the dataset. Synthetic data-points will be created via the R libraries of ROSE and SMOTE. Downsmapling will also be conducted to reduce the level of class imbalance as well as mitigate the level of over-fitting via ROSE and SMOTE. Finally once the issue of class imbalance has been resolved the imputation of missing values in the dataset will be completed via the MICE package in R.
 
-A thesis requirements/template document has been created.  This serves the
-dual purposes of giving students specific requirements to their theses ---
-both style and content related --- while providing a typical thesis
-structure in a \LaTeX\ template.
+\subsection{Creating the Model(5 weeks)}
+The keras framework in python will be used to code to LSTM model
 
-\section{Future Work}
+\subsection{Backup Plan}
+If the LSTM model performs poorly alternative architectures will be used. 
+\begin{itemize}
+  \item Convolutional Neural Network (CNN)
+  \item Vector Auto Regression (VAR)
+  \item Auto-encoder
+\end{itemize}
+\subsubsection{Backup Plan}
+If there are  significant issues with all the of the listed models, the forecasting of TMKs via deep learning will be abandoned and a Random Forest model will be used.
 
-Extract the requirements from the template in order to have very concise
-requirements.
+\section{Thesis C Plan}
+Research ideas for thesis C are dependant on the performance of models created in thesis B
+\subsection{Output Risks}
+The output of LSTM model created in thesis B can be modified to output a calculated risk of a TMK occurring instead of a binary prediction. The plan is for the model to output a percentage likelihood from 0-100\% of a TMK occurring in a particular country for a selected year.
+
+\subsection{Predict Severity}
+The TMK dataset has a ordinal indicator that quantifies the severity of a TMK event. The ordinal indicator is a value from 1 to 8 with 1 being an event that just meets the minimum requirements of a TMK event and 8 being a high-severity event with over 100,000 deaths and the perpetrators were a state who conducted the TMK with organizational intent.
+
+\subsection{Investigate Other Models}
+Depending on the difficulty as well as time constraints, it would be useful to see how different deep learning models perform against each other in the newly generated dataset. Some alternative neural networks that would be interesting to compare against the LSTM include the Convolutional Neural Network, Multi-Layer Perception (MLP) and generic Recurrent Neural Network (RNN). Additionally the architectures of Vector Auto Regression (VAR) and Auto-encoders would be interesting.
+
+\subsection{Fine Tune Model}
+The aim of the thesis is to obtain the best deep learning model for forecasting occurrences of TMK events. Naturally a significant proportion of time will be used to experiment and adjust hyper-parameters to produce the best model. Some hyper-parameters that will be adjusted accordingly include learning rate, dropout, stride, activation function and many others.
+
+
+

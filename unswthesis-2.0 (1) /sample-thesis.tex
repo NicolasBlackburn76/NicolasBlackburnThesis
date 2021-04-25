@@ -1,6 +1,13 @@
 \documentclass[]{unswthesis}
 \usepackage[utf8]{inputenc}
 \usepackage{longtable}
+\usepackage{array}
+\usepackage{multirow}
+\usepackage{graphicx}
+\usepackage{biblatex}
+\addbibresource{pubs.bib}
+\usepackage{hyperref}
+\usepackage[nottoc]{tocbibind}
 
 
 %% Thesis details
@@ -14,9 +21,14 @@
 \thesisdate{28 April 2021}
 \thesissupervisor{Arcot Sowmya}
 
-
 %% My own LaTeX macros, definitions, etc
 \include{definitions}
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage[english]{babel}
+
+\usepackage{biblatex}
+\addbibresource{pubs.bib}
 
 
 \begin{document}
@@ -26,7 +38,7 @@
 \maketitle
 
 \include{abstract}
-\include{acknowledgements}
+% \include{acknowledgements}
 \include{abbreviations}
 
 \tableofcontents
@@ -45,10 +57,9 @@
 %% chapters in the ``backmatter'' section do not have chapter numbering
 %% text in the ``backmatter'' is single spaced
 \backmatter
-\bibliographystyle{alpha}
-\bibliography{pubs}
+% \bibliographystyle{alpha}
+% \bibliography{pubs}
+\printbibliography
 
-\include{appendix1}
-\include{appendix2}
 
 \end{document}
